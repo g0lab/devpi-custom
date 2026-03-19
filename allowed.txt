@@ -1,0 +1,14 @@
+# allowed.txt — package whitelist for the devpi constrained index
+#
+# One entry per line. Follows pip constraint syntax:
+#   package            — any version
+#   package==1.2.3     — exact version
+#   package>=1.0,<2.0  — version range
+#
+# The entrypoint automatically appends the * wildcard, which blocks
+# every package NOT listed here.
+
+pip
+setuptools
+wheel
+requests
