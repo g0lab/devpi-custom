@@ -1,6 +1,6 @@
 services:
   devpi:
-    image: docker.io/g0lab/devpi:latest
+    image: docker.io/g0lab/devpi-custom:latest
     container_name: devpi
     read_only: true
     cap_drop:
