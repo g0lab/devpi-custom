@@ -1,0 +1,45 @@
+name: build devpi
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
+      REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+      REGISTRY_PASS: ${{ secrets.REGISTRY_PASS }}
+      IMAGE_NAME: docker.io/g0lab/devpi-custom
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Sanity check Docker
+        run: docker version
+
+      - name: Login to registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ secrets.REGISTRY_HOST }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASS }}
+
+      - name: Build and push
+        run: |
+          set -euo pipefail
+          BUILD_DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          docker build \
+            --pull \
+            --no-cache \
+            --tag "${IMAGE_NAME}:latest" \
+            --build-arg BUILD_DATE="${BUILD_DATE}" \
+            .
+          docker push "${IMAGE_NAME}:latest"
+          docker builder prune -f
+
+      - name: Log out
+        if: always()
+        run: docker logout "$REGISTRY_HOST" || true
