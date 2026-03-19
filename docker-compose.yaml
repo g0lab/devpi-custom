@@ -1,0 +1,19 @@
+services:
+  devpi:
+    image: docker.io/g0lab/devpi:latest
+    container_name: devpi
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,uid=65534,gid=65534,mode=1700
+      - /nonexistent:rw,noexec,nosuid,nodev,uid=65534,gid=65534,mode=1700
+    user: 65534:65534
+    restart: always
+    ports:
+      - "3141:3141"
+    volumes:
+      - ./devpi-data:/data/devpi
+      - ./allowed.txt:/etc/devpi/allowed.txt:ro
