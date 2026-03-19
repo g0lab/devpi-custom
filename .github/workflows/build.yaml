@@ -38,8 +38,3 @@ jobs:
             --build-arg BUILD_DATE="${BUILD_DATE}" \
             .
           docker push "${IMAGE_NAME}:latest"
-          docker builder prune -f
-
-      - name: Log out
-        if: always()
-        run: docker logout "$REGISTRY_HOST" || true
